@@ -12,14 +12,22 @@
 - 테스트 전략: `docs/04-development/testing-strategy.md`
 - Azure 배포: `docs/05-operations/deployment.md`
 
-## 소개
+## 프로젝트 구조
 
-*추후 업데이트 예정*
+- `frontend/`: 모바일 우선 웹 화면
+- `backend/`: Express API
+- `db/`: PostgreSQL 스키마와 마이그레이션
 
 ## 시작하기
 
-*추후 업데이트 예정*
+1. `npm install`
+2. `npm run dev:backend`
+3. 다른 터미널에서 `npm run dev:frontend`
+
+기본 포트는 다음과 같습니다.
+- 백엔드: `3000`
+- 프론트엔드: `3001`
 
 ## 라이선스
 
-*추후 업데이트 예정*
+추후 결정
