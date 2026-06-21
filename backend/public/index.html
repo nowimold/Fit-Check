@@ -4,6 +4,259 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fit Check</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+        background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+
+      #app {
+        width: 100%;
+        max-width: 500px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        padding: 32px 24px;
+        animation: slideUp 0.6s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1d1d1f;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+        color: #86868b;
+        font-weight: 500;
+      }
+
+      .date {
+        font-size: 13px;
+        color: #a1a1a6;
+        margin-top: 4px;
+      }
+
+      .encouragement {
+        margin-bottom: 32px;
+        padding: 16px;
+        background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%);
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .encouragement.success {
+        background: linear-gradient(135deg, #d1f4d1 0%, #e8f5e9 100%);
+      }
+
+      .encouragement.warning {
+        background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+      }
+
+      .encouragement.celebration {
+        background: linear-gradient(135deg, #ffd6d6 0%, #ffe0e0 100%);
+      }
+
+      .encouragement-text {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1d1d1f;
+      }
+
+      .encouragement.success .encouragement-text {
+        color: #1b5e20;
+      }
+
+      .encouragement.warning .encouragement-text {
+        color: #f57f17;
+      }
+
+      .encouragement.celebration .encouragement-text {
+        color: #c41c3b;
+      }
+
+      .checklist {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .checklist-item {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        background: #f5f5f7;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .checklist-item:hover {
+        background: #efefef;
+      }
+
+      .checklist-item.done {
+        background: #e8f5e9;
+      }
+
+      .checklist-item label {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        cursor: pointer;
+        gap: 12px;
+      }
+
+      .checkbox-wrapper {
+        position: relative;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+      }
+
+      .checkbox-wrapper input {
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        border: 2px solid #d2d2d7;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: white;
+      }
+
+      .checkbox-wrapper input:hover {
+        border-color: #a1a1a6;
+      }
+
+      .checkbox-wrapper input:checked {
+        background: #34c759;
+        border-color: #34c759;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+        background-size: 16px;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .checklist-item.done .item-text {
+        color: #34c759;
+        text-decoration: line-through;
+        text-decoration-color: #34c759;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+      }
+
+      .item-text {
+        font-size: 16px;
+        font-weight: 500;
+        color: #1d1d1f;
+        transition: all 0.2s ease;
+        flex: 1;
+      }
+
+      .progress {
+        margin-top: 32px;
+        padding-top: 32px;
+        border-top: 1px solid #e5e5e7;
+      }
+
+      .progress-label {
+        font-size: 13px;
+        color: #86868b;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: #e5e5e7;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #34c759 0%, #00b894 100%);
+        border-radius: 2px;
+        transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .progress-text {
+        font-size: 13px;
+        color: #1d1d1f;
+        font-weight: 600;
+      }
+
+      .error {
+        color: #ff3b30;
+        font-size: 14px;
+        padding: 16px;
+        background: #ffebee;
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 24px 16px;
+          border-radius: 16px;
+        }
+
+        .title {
+          font-size: 28px;
+        }
+
+        .subtitle {
+          font-size: 14px;
+        }
+
+        .checklist-item {
+          padding: 14px;
+          border-radius: 10px;
+        }
+
+        .item-text {
+          font-size: 15px;
+        }
+      }
+    </style>
   </head>
   <body>
     <script>
@@ -11,8 +264,14 @@
       window.__FIT_CHECK_API_BASE_URL__ = 'https://fitcheckapi5525.azurewebsites.net';
     </script>
     <main id="app">
-      <h1>Fit Check</h1>
-      <p>모바일 우선 웹 앱 스캐폴딩이 준비되었습니다.</p>
+      <div class="container">
+        <div class="header">
+          <h1 class="title">Fit Check</h1>
+          <p class="subtitle">오늘의 건강한 하루를 만들어보세요</p>
+          <p class="date" id="today-date"></p>
+        </div>
+        <div id="content"></div>
+      </div>
     </main>
     <script type="module" src="./src/main.js"></script>
   </body>
