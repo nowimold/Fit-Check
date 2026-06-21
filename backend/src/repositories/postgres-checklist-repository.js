@@ -4,6 +4,21 @@ import { createDefaultChecklistItems } from '../lib/default-checklist.js';
 
 const { Pool } = pg;
 
+export function parsePostgresConnectionString(connectionString) {
+  const url = new URL(connectionString);
+  const database = url.pathname.replace(/^\//, '');
+  const sslmode = url.searchParams.get('sslmode');
+
+  return {
+    host: url.hostname,
+    port: Number(url.port || 5432),
+    user: decodeURIComponent(url.username),
+    password: decodeURIComponent(url.password),
+    database: decodeURIComponent(database),
+    ssl: sslmode === 'require' ? { rejectUnauthorized: false } : false
+  };
+}
+
 export function createPostgresChecklistRepository({
   connectionString = process.env.DATABASE_URL
 } = {}) {
@@ -11,10 +26,7 @@ export function createPostgresChecklistRepository({
     throw new Error('DATABASE_URL is required');
   }
 
-  const pool = new Pool({
-    connectionString,
-    ssl: connectionString.includes('azure') ? { rejectUnauthorized: false } : false
-  });
+  const pool = new Pool(parsePostgresConnectionString(connectionString));
 
   return {
     async ensureUser(userId) {
