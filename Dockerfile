@@ -20,6 +20,7 @@ COPY --from=builder /app/backend/node_modules ./backend/node_modules
 
 # 백엔드 소스만 복사
 COPY backend/src ./backend/src
+COPY backend/public ./backend/public
 COPY backend/package.json ./backend/
 COPY db/schema.sql ./db/
 

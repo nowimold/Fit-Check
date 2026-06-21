@@ -1,5 +1,11 @@
 import express from 'express';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import healthRouter from './routes/health.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const publicDir = join(__dirname, '..', 'public');
 
 function requireUserId(req, res) {
   const userId = req.get('x-user-id');
@@ -16,9 +22,8 @@ export function createApp({ checklistService } = {}) {
 
   app.use(express.json());
 
-  app.get('/', (req, res) => {
-    res.json({ name: 'Fit Check API', status: 'ready' });
-  });
+  // 프론트엔드 정적 파일 서빙 (최우선)
+  app.use(express.static(publicDir));
 
   app.use('/health', healthRouter);
 
@@ -64,6 +69,11 @@ export function createApp({ checklistService } = {}) {
     } catch (error) {
       next(error);
     }
+  });
+
+  // SPA 폴백: 모든 미매칭 경로에 /index.html 제공
+  app.get('*', (req, res) => {
+    res.sendFile(join(publicDir, 'index.html'));
   });
 
   app.use((error, req, res, next) => {
